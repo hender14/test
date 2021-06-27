@@ -24,8 +24,9 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,
         val sb = StringBuilder()
         sb.append("CREATE TABLE cocktailmemos (")
         sb.append("_id INTEGER PRIMARY KEY,")
-        sb.append("name TEXT,")
-        sb.append("note TEXT")
+        sb.append("date TEXT,")
+        sb.append("place TEXT,")
+        sb.append("genre TEXT")
         sb.append(");")
         val sql = sb.toString()
 

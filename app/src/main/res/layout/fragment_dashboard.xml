@@ -126,6 +126,15 @@
             android:background="@color/cardview_shadow_start_color" >
 
             <EditText
+                android:id="@+id/date3Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:ems="10"
+                android:inputType="date" />
+
+            <EditText
                 android:id="@+id/place3Note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,6 +157,12 @@
                 android:text="@string/app_name"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <ListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/lvMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </LinearLayout>
 <!--</androidx.constraintlayout.widget.ConstraintLayout>-->

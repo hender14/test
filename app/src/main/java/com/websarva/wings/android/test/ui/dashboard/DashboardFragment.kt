@@ -11,13 +11,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.websarva.wings.android.test.DatabaseHelper
 import com.websarva.wings.android.test.R
 import com.websarva.wings.android.test.databinding.FragmentDashboardBinding
+import java.sql.Date
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 class DashboardFragment : Fragment() {
 
     /**
      * 選択されたカクテルの主キーIDを表すプロパティ。
      */
-    private var _cocktailId = -1
+    private var _Id = -1
     /**
      * 選択されたカクテル名を表すプロパティ。
      */
@@ -45,24 +49,33 @@ class DashboardFragment : Fragment() {
         val root: View = binding.root
 
         _helper = DatabaseHelper(requireActivity())
-//        val db = helper.writableDatabase
-//        var sql = "SELECT account FROM Bank WHERE _id = 2 "
-//        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
-//        // カクテルリスト用ListView(lvCocktail)を取得。
-//        val lvCocktail = view.findViewById<ListView>(R.id.lvCocktail)
-//        // lvCocktailにリスナを登録。
-//        lvCocktail.onItemClickListener = ListItemClickListener()
-//        val listView: ListView = binding.lvCocktail
-        binding.lvCocktail.onItemClickListener = ListItemClickListener()
-//        binding.lvCocktail.text = DashboardViewModel.lvCocktail
-//        binding.lvCocktail.setOnClickListener { ListItemClickListener() }
+//        //リストリスナの登録
+//        binding.lvCocktail.onItemClickListener = ListItemClickListener()
+        //リスナの登録
         binding.btnSave.setOnClickListener { onSaveButtonClick(root) }
 //        val textView: TextView = binding.textDashboard
 //        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
 //            textView.text = it
 //        })
+
+        val db = _helper.writableDatabase
+        // 検索SQL文字列の用意。
+        val sql = "SELECT * FROM cocktailmemos"
+        // SQLの実行。
+        val cursor = db.rawQuery(sql, null)
+
+//        // SimpleAdapterで使用するMutableListオブジェクトを用意。
+//        val menuList: MutableList<MutableMap<String, String>> = mutableListOf()
+        // SimpleAdapter第4引数from用データの用意。
+        val from = arrayOf("_id", "date")
+        // SimpleAdapter第5引数to用データの用意。
+        val to = intArrayOf(android.R.id.text2, android.R.id.text2)
+        // SimpleAdapterを生成。
+        val adapter = SimpleCursorAdapter(requireActivity(), android.R.layout.simple_list_item_2, cursor, from, to)
+        // アダプタの登録。
+        binding.lvMenu.adapter = adapter
+
         return root
-//        return view
     }
 
     override fun onDestroyView() {
@@ -82,10 +95,12 @@ class DashboardFragment : Fragment() {
     fun onSaveButtonClick(view: View) {
 //    private inner class ButtonClickListener : View.OnClickListener {
 //        override fun onClick(view: View) {
-//        // 感想欄を取得。
-//        val etNote = view.findViewById<EditText>(R.id.etNote)
-        // 入力された感想を取得。
-        val note = binding.etNote.text.toString()
+
+        val _Id = getToday()
+        // 入力された日付、場所、ジャンル情報を取得。
+        val date = binding.date3Note.text.toString()
+        val place = binding.place3Note.text.toString()
+        val genre = binding.genre3Note.text.toString()
 
         // データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
 //        val helper = DatabaseHelper(requireActivity())
@@ -97,82 +112,87 @@ class DashboardFragment : Fragment() {
         // SQL文字列を元にプリペアドステートメントを取得。
         var stmt = db.compileStatement(sqlDelete)
         // 変数のバイド。
-        stmt.bindLong(1, _cocktailId.toLong())
+        stmt.bindLong(1, _Id.toLong())
         // 削除SQLの実行。
         stmt.executeUpdateDelete()
 
         // インサート用SQL文字列の用意。
-        val sqlInsert = "INSERT INTO cocktailmemos (_id, name, note) VALUES (?, ?, ?)"
+        val sqlInsert = "INSERT INTO cocktailmemos (_id, date, place, genre) VALUES (?, ?, ?, ?)"
         // SQL文字列を元にプリペアドステートメントを取得。
         stmt = db.compileStatement(sqlInsert)
         // 変数のバイド。
-        stmt.bindLong(1, _cocktailId.toLong())
-        stmt.bindString(2, _cocktailName)
-        stmt.bindString(3, note)
+        stmt.bindLong(1, _Id.toLong())
+        stmt.bindString(2, date)
+        stmt.bindString(3, place)
+        stmt.bindString(4, genre)
         // インサートSQLの実行。
         stmt.executeInsert()
 
             // 感想欄の入力値を消去。
-            binding.etNote.setText("")
-//        // カクテル名を表示するTextViewを取得。
-//        val tvCocktailName = view.findViewById<TextView>(R.id.tvCocktailName)
-            // カクテル名を「未選択」に変更。
-            binding.tvCocktailName.text = getString(R.string.tv_name)
-            // 保存ボタンを取得。
-//        val btnSave = view.findViewById<Button>(R.id.btnSave)
-            // 保存ボタンをタップできないように変更。
-            binding.btnSave.isEnabled = false
+            binding.date3Note.setText("")
+            binding.place3Note.setText("")
+            binding.genre3Note.setText("")
+////            // 保存ボタンをタップできないように変更。
+////            binding.btnSave.isEnabled = false
     }
+
+
+    fun getToday(): String {
+        val date = Date()
+        val format = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())
+        return format.format(date)
+    }
+
 
     /**
      * リストがタップされたときの処理が記述されたメンバクラス。
      */
-    private inner class ListItemClickListener : AdapterView.OnItemClickListener {
-        override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            // タップされた行番号をプロパティの主キーIDに代入。
-            _cocktailId = position
-            // タップされた行のデータを取得。これがカクテル名となるので、プロパティに代入。
-            _cocktailName = parent.getItemAtPosition(position) as String
-            // カクテル名を表示するTextViewを取得。
-//            val tvCocktailName = view.findViewById<TextView>(R.id.tvCocktailName)
-            // カクテル名を表示するTextViewに表示カクテル名を設定。
-            binding.tvCocktailName.text = _cocktailName
-
-            // 保存ボタンを取得。
-//            val btnSave = view.findViewById<Button>(R.id.btnSave)
-            // 保存ボタンをタップできるように設定。
-            binding.btnSave.isEnabled = true
+//    private inner class ListItemClickListener : AdapterView.OnItemClickListener {
+//        override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+//            // タップされた行番号をプロパティの主キーIDに代入。
+//            _cocktailId = position
+//            // タップされた行のデータを取得。これがカクテル名となるので、プロパティに代入。
+//            _cocktailName = parent.getItemAtPosition(position) as String
+//            // カクテル名を表示するTextViewに表示カクテル名を設定。
+//            binding.tvCocktailName.text = _cocktailName
+//
+//            // 保存ボタンをタップできるように設定。
+//            binding.btnSave.isEnabled = true
 
             // データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
 //            val helper = DatabaseHelper(requireActivity())
-            val db = _helper.writableDatabase
-            // 主キーによる検索SQL文字列の用意。
-            val sql = "SELECT * FROM cocktailmemos WHERE _id = ${_cocktailId}"
-            // SQLの実行。
-            val cursor = db.rawQuery(sql, null)
+//            val db = _helper.writableDatabase
+//            // 主キーによる検索SQL文字列の用意。
+//            val sql = "SELECT * FROM cocktailmemos WHERE _id = ${_cocktailId}"
+//            val sql = "SELECT * FROM cocktailmemos"
+//            // SQLの実行。
+//            val cursor = db.rawQuery(sql, null)
 
-//            // 以下はバインド変数を使う場合の記述。
-////			val sql = "SELECT * FROM cocktailmemos WHERE _id = ?"
-////			val params = arrayOf(_cocktailId.toString())
-////			val cursor = db.rawQuery(sql, params)
+            // 画面部品ListViewを取得
+//            val lvMenu = binding.lvMenu.text.toString()
+//            // SimpleAdapterで使用するMutableListオブジェクトを用意。
+//            val menuList: MutableList<MutableMap<String, String>> = mutableListOf()
 //
-//            // 以下はSQL文を使わない場合。
-////			val params = arrayOf(_cocktailId.toString())
-////			val cursor = db.query("cocktailmemos", null, "_id = ?", params, null, null, null)
+//            // SimpleAdapter第4引数from用データの用意。
+//            val from = arrayOf("_id", "date")
+//            // SimpleAdapter第5引数to用データの用意。
+//            val to = intArrayOf(android.R.id.text1, android.R.id.text2)
+//            // SimpleAdapterを生成。
+//            val adapter = SimpleCursorAdapter(requireActivity(), android.R.layout.simple_list_item_2, cursor, from, to)
+//            // アダプタの登録。
+//            binding.lvMenu.adapter = adapter
+            // リストタップのリスナクラス登録。
+//            binding.lvMenu.onItemClickListener = ListItemClickListener()
 
-            // データベースから取得した値を格納する変数の用意。データがなかった時のための初期値も用意。
-            var note = ""
-            // SQL実行の戻り値であるカーソルオブジェクトをループさせてデータベース内のデータを取得。
-            while(cursor.moveToNext()) {
-                // カラムのインデックス値を取得。
-                val idxNote = cursor.getColumnIndex("note")
-                // カラムのインデックス値を元に実際のデータを取得。
-                note = cursor.getString(idxNote)
-            }
-            // 感想のEditTextの各画面部品を取得しデータベースの値を反映。
-//            val etNote = findViewById<EditText>(R.id.etNote)
-            binding.etNote.setText(note)
-        }
-    }
-
+//            // SQL実行の戻り値であるカーソルオブジェクトをループさせてデータベース内のデータを取得。
+//            while(cursor.moveToNext()) {
+//                // カラムのインデックス値を取得。
+//                val idxNote = cursor.getColumnIndex("note")
+//                // カラムのインデックス値を元に実際のデータを取得。
+//                note = cursor.getString(idxNote)
+//            }
+//            binding.etNote.setText(note)
+//        }
+//    }
+//
 }
