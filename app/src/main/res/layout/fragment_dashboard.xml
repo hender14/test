@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".ui.dashboard.DashboardFragment">-->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical"
+    tools:context=".ui.dashboard.DashboardFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:background="@color/cardview_shadow_start_color" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/explore_name" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:background="@color/cardview_shadow_start_color" >
+
+            <EditText
+                android:id="@+id/placeNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+            <EditText
+                android:id="@+id/genreNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+            <Button
+                android:id="@+id/btnlink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:background="@color/cardview_shadow_start_color" >
+
+            <EditText
+                android:id="@+id/place2Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+            <EditText
+                android:id="@+id/genre2Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+            <Button
+                android:id="@+id/btn2link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:background="@color/cardview_shadow_start_color" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/register_info" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:background="@color/cardview_shadow_start_color" >
+
+            <EditText
+                android:id="@+id/place3Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+            <EditText
+                android:id="@+id/genre3Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--<ListView-->
+<!--android:id="@+id/lvCocktail"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="0dp"-->
+<!--android:layout_marginBottom="10dp"-->
+<!--android:layout_weight="0.6"-->
+<!--android:background="@color/cardview_shadow_start_color"-->
+<!--android:entries="@array/lv_cocktaillist" />-->
+
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:text="@string/tv_lb_name"-->
+<!--android:textSize="20sp" />-->
+
+<!--<TextView-->
+<!--android:id="@+id/tvCocktailName"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:text="@string/tv_name"-->
+<!--android:textSize="20sp" />-->
+
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="5dp"-->
+<!--android:text="@string/tv_lb_note"-->
+<!--android:textSize="20sp" />-->
+
+<!--<EditText-->
+<!--android:id="@+id/etNote"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="0dp"-->
+<!--android:layout_weight="0.4"-->
+<!--android:gravity="top"-->
+<!--android:inputType="textMultiLine" />-->
+
+<!--<Button-->
+<!--android:id="@+id/btnSave"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:enabled="false"-->
+<!--android:text="@string/btn_save"-->
+<!--android:layout_marginBottom="50dp"-->
+<!--android:textSize="20sp"/>-->
+<!--    &lt;!&ndash;        android:onClick="onSaveButtonClick"&ndash;&gt;-->
