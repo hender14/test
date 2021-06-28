@@ -1,6 +1,8 @@
 package com.websarva.wings.android.test.ui.dashboard
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.websarva.wings.android.test.DatabaseHelper
 import com.websarva.wings.android.test.R
 import com.websarva.wings.android.test.databinding.FragmentDashboardBinding
+import java.net.URLEncoder
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -27,12 +30,6 @@ class DashboardFragment : Fragment() {
      */
     private var _cocktailName = ""
 
-//    var mContext: Context? = null
-    //    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        mContext = context
-//    }
-//    private val _helper = DatabaseHelper( mContext)
     private lateinit var _helper: DatabaseHelper
 //    private lateinit var dashboardViewModel: DashboardViewModel
     private var _binding: FragmentDashboardBinding? = null
@@ -49,9 +46,11 @@ class DashboardFragment : Fragment() {
         val root: View = binding.root
 
         _helper = DatabaseHelper(requireActivity())
-//        //リストリスナの登録
-//        binding.lvCocktail.onItemClickListener = ListItemClickListener()
+
         //リスナの登録
+        binding.btnMapSearch.setOnClickListener { onMapSearchButtonClick(root) }
+        binding.btnYelpSearch.setOnClickListener { onYelpSearchButtonClick(root) }
+        binding.btnTabeloguSearch.setOnClickListener { onTabeloguSearchButtonClick(root) }
         binding.btnSave.setOnClickListener { onSaveButtonClick(root) }
 //        val textView: TextView = binding.textDashboard
 //        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
@@ -59,21 +58,6 @@ class DashboardFragment : Fragment() {
 //        })
 
         val db = _helper.writableDatabase
-        // 検索SQL文字列の用意。
-        val sql = "SELECT * FROM cocktailmemos"
-        // SQLの実行。
-        val cursor = db.rawQuery(sql, null)
-
-//        // SimpleAdapterで使用するMutableListオブジェクトを用意。
-//        val menuList: MutableList<MutableMap<String, String>> = mutableListOf()
-        // SimpleAdapter第4引数from用データの用意。
-        val from = arrayOf("_id", "date")
-        // SimpleAdapter第5引数to用データの用意。
-        val to = intArrayOf(android.R.id.text2, android.R.id.text2)
-        // SimpleAdapterを生成。
-        val adapter = SimpleCursorAdapter(requireActivity(), android.R.layout.simple_list_item_2, cursor, from, to)
-        // アダプタの登録。
-        binding.lvMenu.adapter = adapter
 
         return root
     }
@@ -143,56 +127,54 @@ class DashboardFragment : Fragment() {
         return format.format(date)
     }
 
+    /**
+     * 地図検索ボタンがタップされたときの処理メソッド。
+     */
+    fun onMapSearchButtonClick(view: View) {
+        // 入力欄に入力されたキーワード文字列を取得。
+        val SearchWord = binding.placeNote.text.toString()
+        val SearchWord2 = binding.genreNote.text.toString()
+        var searchWord ="${SearchWord} ${SearchWord2}".toString()
+        // 入力されたキーワードをURLエンコード。
+        searchWord = URLEncoder.encode(searchWord, "UTF-8")
+        // マップアプリと連携するURI文字列を生成。
+        val uriStr = "geo:0,0?q=${searchWord}"
+        // URI文字列からURIオブジェクトを生成。
+        val uri = Uri.parse(uriStr)
+        // Intentオブジェクトを生成。
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        // アクティビティを起動。
+        startActivity(intent)
+    }
 
     /**
-     * リストがタップされたときの処理が記述されたメンバクラス。
+     * 地図検索ボタンがタップされたときの処理メソッド。
      */
-//    private inner class ListItemClickListener : AdapterView.OnItemClickListener {
-//        override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-//            // タップされた行番号をプロパティの主キーIDに代入。
-//            _cocktailId = position
-//            // タップされた行のデータを取得。これがカクテル名となるので、プロパティに代入。
-//            _cocktailName = parent.getItemAtPosition(position) as String
-//            // カクテル名を表示するTextViewに表示カクテル名を設定。
-//            binding.tvCocktailName.text = _cocktailName
-//
-//            // 保存ボタンをタップできるように設定。
-//            binding.btnSave.isEnabled = true
+    fun onYelpSearchButtonClick(view: View) {
+        // 入力欄に入力されたキーワード文字列を取得。
+        val SearchWord = binding.placeNote.text.toString()
+        val SearchWord2 = binding.genreNote.text.toString()
+        var searchWord ="${SearchWord} ${SearchWord2}".toString()
+        // 入力されたキーワードをURLエンコード。
+        searchWord = URLEncoder.encode(searchWord, "UTF-8")
+        // マップアプリと連携するURI文字列を生成。
+        val uriStr = "https://www.yelp.com/search?find_desc=${SearchWord} ${SearchWord2}&find_loc="
+        // URI文字列からURIオブジェクトを生成。
+        val uri = Uri.parse(uriStr)
+        // Intentオブジェクトを生成。
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        // アクティビティを起動。
+        startActivity(intent)
+    }
 
-            // データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
-//            val helper = DatabaseHelper(requireActivity())
-//            val db = _helper.writableDatabase
-//            // 主キーによる検索SQL文字列の用意。
-//            val sql = "SELECT * FROM cocktailmemos WHERE _id = ${_cocktailId}"
-//            val sql = "SELECT * FROM cocktailmemos"
-//            // SQLの実行。
-//            val cursor = db.rawQuery(sql, null)
-
-            // 画面部品ListViewを取得
-//            val lvMenu = binding.lvMenu.text.toString()
-//            // SimpleAdapterで使用するMutableListオブジェクトを用意。
-//            val menuList: MutableList<MutableMap<String, String>> = mutableListOf()
-//
-//            // SimpleAdapter第4引数from用データの用意。
-//            val from = arrayOf("_id", "date")
-//            // SimpleAdapter第5引数to用データの用意。
-//            val to = intArrayOf(android.R.id.text1, android.R.id.text2)
-//            // SimpleAdapterを生成。
-//            val adapter = SimpleCursorAdapter(requireActivity(), android.R.layout.simple_list_item_2, cursor, from, to)
-//            // アダプタの登録。
-//            binding.lvMenu.adapter = adapter
-            // リストタップのリスナクラス登録。
-//            binding.lvMenu.onItemClickListener = ListItemClickListener()
-
-//            // SQL実行の戻り値であるカーソルオブジェクトをループさせてデータベース内のデータを取得。
-//            while(cursor.moveToNext()) {
-//                // カラムのインデックス値を取得。
-//                val idxNote = cursor.getColumnIndex("note")
-//                // カラムのインデックス値を元に実際のデータを取得。
-//                note = cursor.getString(idxNote)
-//            }
-//            binding.etNote.setText(note)
-//        }
-//    }
-//
+    fun onTabeloguSearchButtonClick(view: View) {
+        // マップアプリと連携するURI文字列を生成。
+        val uriStr = "https://tabelog.com/"
+        // URI文字列からURIオブジェクトを生成。
+        val uri = Uri.parse(uriStr)
+        // Intentオブジェクトを生成。
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        // アクティビティを起動。
+        startActivity(intent)
+    }
 }
