@@ -1,10 +1,12 @@
 package com.websarva.wings.android.test.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.SimpleCursorAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -115,31 +117,32 @@ class HomeFragment : Fragment() {
         _helper.close()
         super.onDestroy()
     }
-    /**
-     * オプションメニューの表示
-     */
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        // オプションメニュー用xmlファイルをインフレイト。
-        inflater.inflate(R.menu.delete_check, menu);
-        super.onCreateOptionsMenu(menu, inflater)
-//        MenuInflater: inflater = getSupportMenuInflater();
-//        MenuInflater.inflate(R.menu.delete_check, menu)
-//        return true
-    }
 
-    /**
-     * オプションメニューの内容
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return (when(item.itemId) {
-            R.id.column_delete -> {
-                true
-            }
-            else ->
-                super.onOptionsItemSelected(item)
-        })
-    }
+//    /**
+//     * オプションメニューの表示
+//     */
+////    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        // オプションメニュー用xmlファイルをインフレイト。
+//        inflater.inflate(R.menu.delete_check, menu);
+//        super.onCreateOptionsMenu(menu, inflater)
+////        MenuInflater: inflater = getSupportMenuInflater();
+////        MenuInflater.inflate(R.menu.delete_check, menu)
+////        return true
+//    }
+
+//    /**
+//     * オプションメニューの内容
+//     */
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return (when(item.itemId) {
+//            R.id.column_delete -> {
+//                true
+//            }
+//            else ->
+//                super.onOptionsItemSelected(item)
+//        })
+//    }
 
     /**
      * リストがタップされたときの処理が記述されたメンバクラス。
@@ -148,22 +151,25 @@ class HomeFragment : Fragment() {
         override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
             // タップされた行番号をプロパティの主キーIDに代入。
             _cocktailId = position
-//            // タップされた行のデータを取得。これがカクテル名となるので、プロパティに代入。
+            // タップされた行のデータを取得。これがカクテル名となるので、プロパティに代入。
 //            _cocktailName = parent.getItemAtPosition(position) as String
+            //デバッグ用
+            println("LifeCycleSample" + id )
+//            Toast.makeText(this, "${cocktailName}が現れた！", Toast.LENGTH_SHORT).show()
 //            // カクテル名を表示するTextViewに表示カクテル名を設定。
-//            binding.tvCocktailName.text = _cocktailName
-
+//            binding.lvMenu.text = _cocktailName
+            view.setBackgroundColor(0xfff7aec)
             // 保存ボタンをタップできるように設定。
             binding.check.isEnabled = true
 
     // データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
-            val helper = DatabaseHelper(requireActivity())
-            val db = _helper.writableDatabase
-            // 主キーによる検索SQL文字列の用意。
-//            val sql = "SELECT * FROM cocktailmemos WHERE _id = ${_cocktailId}"
-            val sql = "SELECT * FROM cocktailmemos"
-            // SQLの実行。
-            val cursor = db.rawQuery(sql, null)
+//            val helper = DatabaseHelper(requireActivity())
+//            val db = _helper.writableDatabase
+//            // 主キーによる検索SQL文字列の用意。
+////            val sql = "SELECT * FROM cocktailmemos WHERE _id = ${_cocktailId}"
+//            val sql = "SELECT * FROM cocktailmemos"
+//            // SQLの実行。
+//            val cursor = db.rawQuery(sql, null)
 
 //            // SQL実行の戻り値であるカーソルオブジェクトをループさせてデータベース内のデータを取得。
 //            while(cursor.moveToNext()) {
