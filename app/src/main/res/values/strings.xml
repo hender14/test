@@ -3,12 +3,38 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="explore_name">レストラン予約のおすすめ</string>
-    <string name="register_info">カレンダーへ登録する</string>
-    <string name="tv_lb_name">選択されたカクテル:</string>
-    <string name="tv_name">未選択</string>
-    <string name="tv_lb_note">感想:</string>
+    <string name="explore_name">エリア・カテゴリ検索</string>
+    <string name="area_name">エリア</string>
+    <string name="category_name">カテゴリ</string>
+    <string name="site_name">検索サイト</string>
+    <string name="googlemap_name">Google Mapにて検索</string>
+    <string name="yelp_name">YELPにて検索</string>
+    <string name="taberogu_name">食べログサイトへ移動</string>
+    <string name="register_info">カレンダーに保存する</string>
+    <string name="date_name">日付</string>
+    <string name="calender_select">カレンダーから選ぶ</string>
+    <string name="content_name">内容</string>
+    <string name="next_name">今後の予定</string>
     <string name="btn_save">保存</string>
-    <string name="btn_delete">削除する</string>
+    <string name="btn_delete">削除</string>
     <string name="btn_cancel">キャンセルする</string>
+    <string-array name="sp_category">
+        <item>レストラン</item>
+        <item>コーヒー</item>
+        <item>ラーメン</item>
+        <item>居酒屋</item>
+        <item>テイクアウト</item>
+        <item>公園</item>
+        <item>スポーツジム</item>
+        <item>アート</item>
+        <item>観光スポット</item>
+        <item>映画</item>
+        <item>美術館</item>
+        <item>博物館</item>
+        <item>ホテル</item>
+        <item>美容院</item>
+        <item>レンタカー</item>
+        <item>病院</item>
+    </string-array>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.websarva.wings.android.test.ui.dashboard
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -52,6 +53,7 @@ class DashboardFragment : Fragment() {
         binding.btnYelpSearch.setOnClickListener { onYelpSearchButtonClick(root) }
         binding.btnTabeloguSearch.setOnClickListener { onTabeloguSearchButtonClick(root) }
         binding.btnSave.setOnClickListener { onSaveButtonClick(root) }
+        binding.date3Note.setOnClickListener { onDateButtonClick(root) }
 //        val textView: TextView = binding.textDashboard
 //        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
 //            textView.text = it
@@ -145,6 +147,8 @@ class DashboardFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW, uri)
         // アクティビティを起動。
         startActivity(intent)
+        binding.place3Note.setText("${SearchWord}")
+        binding.genre3Note.setText("${SearchWord2}")
     }
 
     /**
@@ -165,6 +169,8 @@ class DashboardFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW, uri)
         // アクティビティを起動。
         startActivity(intent)
+        binding.place3Note.setText("${SearchWord}")
+        binding.genre3Note.setText("${SearchWord2}")
     }
 
     fun onTabeloguSearchButtonClick(view: View) {
@@ -176,5 +182,21 @@ class DashboardFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW, uri)
         // アクティビティを起動。
         startActivity(intent)
+    }
+
+    fun onDateButtonClick(view: View) {
+        val calendar = Calendar.getInstance()
+        val Year = calendar.get(Calendar.YEAR)
+        val Month = calendar.get(Calendar.MONTH)
+        val Day = calendar.get(Calendar.DAY_OF_MONTH)
+        val datePickerDialog = DatePickerDialog(
+            requireActivity(),
+            DatePickerDialog.OnDateSetListener() {view, year, month, dayOfMonth->
+                binding.date3Note.text = "${year}/${month + 1}/${dayOfMonth}"
+            },
+            Year,
+            Month,
+            Day)
+        datePickerDialog.show()
     }
 }

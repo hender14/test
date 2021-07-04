@@ -13,54 +13,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.websarva.wings.android.test.DatabaseHelper
 import com.websarva.wings.android.test.R
 import com.websarva.wings.android.test.databinding.ActivityMainBinding.inflate
-import com.websarva.wings.android.test.databinding.FragmentDashboardBinding
 import com.websarva.wings.android.test.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
-
-//    private lateinit var _helper: DatabaseHelper
-//    private lateinit var homeViewModel: HomeViewModel
-//    private var _binding: FragmentHomeBinding? = null
-//
-//    // This property is only valid between onCreateView and
-//    // onDestroyView.
-//    private val binding get() = _binding!!
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        homeViewModel =
-//            ViewModelProvider(this).get(HomeViewModel::class.java)
-//
-//        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-//
-//        _helper = DatabaseHelper(requireActivity())
-//
-//        val textView: TextView = binding.textHome
-//        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
-//        return root
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-
-
     /**
      * 選択されたカクテルの主キーIDを表すプロパティ。
      */
     private var _cocktailId = -1
+    private var deleteId: Long = -1
 
     /**
      * 選択されたカクテル名を表すプロパティ。
      */
-    private var _cocktailName = ""
+    private var lastview: View? = null
 
     private lateinit var _helper: DatabaseHelper
 
@@ -93,9 +58,9 @@ class HomeFragment : Fragment() {
 //        // SimpleAdapterで使用するMutableListオブジェクトを用意。
 //        val menuList: MutableList<MutableMap<String, String>> = mutableListOf()
         // SimpleAdapter第4引数from用データの用意。
-        val from = arrayOf("_id", "date", "place", "genre")
+        val from = arrayOf("date", "place", "genre")
         // SimpleAdapter第5引数to用データの用意。
-        val to = intArrayOf(R.id.id_column, R.id.date_column, R.id.place_column, R.id.genre_column)
+        val to = intArrayOf(R.id.date_column, R.id.place_column, R.id.genre_column)
         // SimpleAdapterを生成。
         val adapter = SimpleCursorAdapter(requireActivity(), R.layout.row, cursor, from, to)
         // アダプタの登録。
@@ -103,6 +68,7 @@ class HomeFragment : Fragment() {
 
         //リストリスナの登録
         binding.lvMenu.onItemLongClickListener = ListItemLongClickListener()
+        binding.check.setOnClickListener { onDeleteButtonClick(root) }
 
         return root
     }
@@ -143,27 +109,32 @@ class HomeFragment : Fragment() {
 //                super.onOptionsItemSelected(item)
 //        })
 //    }
-
     /**
      * リストがタップされたときの処理が記述されたメンバクラス。
      */
     private inner class ListItemLongClickListener : AdapterView.OnItemLongClickListener {
         override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+            if (lastview != null) {
+                lastview?.setBackgroundResource(R.color.white) }
             // タップされた行番号をプロパティの主キーIDに代入。
             _cocktailId = position
             // タップされた行のデータを取得。これがカクテル名となるので、プロパティに代入。
 //            _cocktailName = parent.getItemAtPosition(position) as String
             //デバッグ用
-            println("LifeCycleSample" + id )
+//            println("LifeCycleSample" + id )
 //            Toast.makeText(this, "${cocktailName}が現れた！", Toast.LENGTH_SHORT).show()
 //            // カクテル名を表示するTextViewに表示カクテル名を設定。
-//            binding.lvMenu.text = _cocktailName
-            view.setBackgroundColor(0xfff7aec)
+//            binding.lvMenu.setBackgroundResource(R.color.white)
+//            view.setBackgroundColor(0xfff7aec)
+            view.setBackgroundResource(R.color.gray)
+            if (lastview == view) {
+                lastview?.setBackgroundResource(R.color.white) }
+            lastview = view
+//            println("LifeCycleSample" + color )
             // 保存ボタンをタップできるように設定。
             binding.check.isEnabled = true
-
+            deleteId = id
     // データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
-//            val helper = DatabaseHelper(requireActivity())
 //            val db = _helper.writableDatabase
 //            // 主キーによる検索SQL文字列の用意。
 ////            val sql = "SELECT * FROM cocktailmemos WHERE _id = ${_cocktailId}"
@@ -184,4 +155,45 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * 削除ボタンがタップされた時の処理メソッド。
+     */
+    fun onDeleteButtonClick(view: View) {
+        // データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
+//        val helper = DatabaseHelper(requireActivity())
+        val db = _helper.writableDatabase
+
+        // まず、リストで選択されたカクテルのメモデータを削除。その後インサートを行う。
+        // 削除用SQL文字列を用意。
+        val sqlDelete = "DELETE FROM cocktailmemos WHERE _id = ${deleteId}"
+        // SQL文字列を元にプリペアドステートメントを取得。
+        var stmt = db.compileStatement(sqlDelete)
+        // 変数のバイド。
+//        stmt.bindLong(1, _id.toLong())
+        // 削除SQLの実行。
+        stmt.executeUpdateDelete()
+
+        // 保存ボタンをタップできないように変更。
+        binding.check.isEnabled = false
+        onupdateView()
+    }
+
+     fun onupdateView() {
+        val db = _helper.writableDatabase
+        // 検索SQL文字列の用意。
+        val sql = "SELECT * FROM cocktailmemos"
+        // SQLの実行。
+        val cursor = db.rawQuery(sql, null)
+
+//        // SimpleAdapterで使用するMutableListオブジェクトを用意。
+//        val menuList: MutableList<MutableMap<String, String>> = mutableListOf()
+        // SimpleAdapter第4引数from用データの用意。
+        val from = arrayOf("date", "place", "genre")
+        // SimpleAdapter第5引数to用データの用意。
+        val to = intArrayOf(R.id.date_column, R.id.place_column, R.id.genre_column)
+        // SimpleAdapterを生成。
+        val adapter = SimpleCursorAdapter(requireActivity(), R.layout.row, cursor, from, to)
+        // アダプタの登録。
+        binding.lvMenu.adapter = adapter
+    }
 }
