@@ -120,7 +120,7 @@ class DashboardFragment : Fragment() {
         stmt.executeInsert()
 
             // 感想欄の入力値を消去。
-            binding.date3Note.setText("")
+            binding.date3Note.setText("カレンダーから選ぶ")
             binding.place3Note.setText("")
             binding.genre3Note.setText("")
 ////            // 保存ボタンをタップできないように変更。
@@ -197,7 +197,8 @@ class DashboardFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             requireActivity(),
             DatePickerDialog.OnDateSetListener() {view, year, month, dayOfMonth->
-                binding.date3Note.text = "${year}/${month + 1}/${dayOfMonth}"
+                binding.date3Note.text = String.format("%d-%02d-%02d", year, month+1, dayOfMonth)
+//                binding.date3Note.text = "${year}-${month + 1}-${dayOfMonth}"
             },
             Year,
             Month,

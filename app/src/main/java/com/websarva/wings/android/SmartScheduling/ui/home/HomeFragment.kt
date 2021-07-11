@@ -9,6 +9,8 @@ import com.websarva.wings.android.SmartScheduling.DatabaseHelper
 import com.websarva.wings.android.SmartScheduling.R
 import com.websarva.wings.android.SmartScheduling.databinding.ActivityMainBinding.inflate
 import com.websarva.wings.android.SmartScheduling.databinding.FragmentHomeBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeFragment : Fragment() {
     /**
@@ -46,7 +48,7 @@ class HomeFragment : Fragment() {
 
         val db = _helper.writableDatabase
         // 検索SQL文字列の用意。
-        val sql = "SELECT * FROM cocktailmemos"
+        val sql = "SELECT * FROM cocktailmemos WHERE date >= DATE('NOW') ORDER BY date ASC"
         // SQLの実行。
         val cursor = db.rawQuery(sql, null)
 
@@ -60,6 +62,7 @@ class HomeFragment : Fragment() {
         val adapter = SimpleCursorAdapter(requireActivity(), R.layout.row, cursor, from, to)
         // アダプタの登録。
         binding.lvMenu.adapter = adapter
+        ListHelper.getListViewSize(binding.lvMenu)
 
         //リストリスナの登録
         binding.lvMenu.onItemLongClickListener = ListItemLongClickListener()
@@ -176,7 +179,7 @@ class HomeFragment : Fragment() {
      fun onupdateView() {
         val db = _helper.writableDatabase
         // 検索SQL文字列の用意。
-        val sql = "SELECT * FROM cocktailmemos"
+         val sql = "SELECT * FROM cocktailmemos WHERE date >= DATE('NOW') ORDER BY date ASC"
         // SQLの実行。
         val cursor = db.rawQuery(sql, null)
 
@@ -190,5 +193,6 @@ class HomeFragment : Fragment() {
         val adapter = SimpleCursorAdapter(requireActivity(), R.layout.row, cursor, from, to)
         // アダプタの登録。
         binding.lvMenu.adapter = adapter
+        ListHelper.getListViewSize(binding.lvMenu)
     }
 }
